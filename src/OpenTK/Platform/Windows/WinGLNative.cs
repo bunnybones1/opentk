@@ -65,6 +65,7 @@ namespace OpenTK.Platform.Windows
         private bool mouse_outside_window = true;
         private int mouse_capture_count = 0;
         private int mouse_last_timestamp = 0;
+        private Point last_mouse_position = new Point (0, 0);
         private bool invisible_since_creation; // Set by WindowsMessage.CREATE and consumed by Visible = true (calls BringWindowToFront).
         private int suppress_resize; // Used in WindowBorder and WindowState in order to avoid rapid, consecutive resize events.
         private bool is_in_modal_loop; // set to true whenever we enter the modal resize/move event loop
@@ -477,12 +478,15 @@ namespace OpenTK.Platform.Windows
                 if (points == 0 || (points == -1 && lastError == Constants.ERROR_POINT_NOT_FOUND))
                 {
                     // Just use the mouse move position
-                    OnMouseMove(point.X, point.Y);
-                }
-                else if (points == -1)
+                    OnMouseMove (point.X, point.Y, point.X - last_mouse_position.X, point.Y - last_mouse_position.Y);
+                    last_mouse_position.X = point.X;
+                    last_mouse_position.Y = point.Y;
+                } else if (points == -1)
                 {
                     // A different error occured - we still just use the mouse move position.
-                    OnMouseMove(point.X, point.Y);
+                    OnMouseMove (point.X, point.Y, point.X - last_mouse_position.X, point.Y - last_mouse_position.Y);
+                    last_mouse_position.X = point.X;
+                    last_mouse_position.Y = point.Y;
                 }
                 else
                 {
@@ -520,7 +524,9 @@ namespace OpenTK.Platform.Windows
                             position.Y -= 65536;
                         }
                         Functions.ScreenToClient(handle, ref position);
-                        OnMouseMove(position.X, position.Y);
+                        OnMouseMove(position.X, position.Y, position.X - last_mouse_position.X, position.Y - last_mouse_position.Y);
+                        last_mouse_position.X = position.X;
+                        last_mouse_position.Y = position.Y;
                     }
                 }
                 mouse_last_timestamp = timestamp;

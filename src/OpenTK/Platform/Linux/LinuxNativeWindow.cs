@@ -297,6 +297,7 @@ namespace OpenTK.Platform.Linux
                 int y = mouse.Y;
 
                 // Make sure the mouse cannot leave the GameWindow when captured
+                // todo fix linux mouse code to treat CursorVisible and CursorGrabbed correctly
                 if (!CursorVisible)
                 {
                     x = MathHelper.Clamp(mouse.X, Bounds.Left, Bounds.Right - 1);
@@ -309,7 +310,7 @@ namespace OpenTK.Platform.Linux
 
                 if (x != previous_mouse.X || y != previous_mouse.Y)
                 {
-                    OnMouseMove(x, y);
+                    OnMouseMove(x, y, previous_mouse.X - x, previous_mouse.Y - y);
                 }
             }
 
