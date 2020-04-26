@@ -1065,7 +1065,9 @@ namespace OpenTK.Platform.X11
                         {
                             OnMouseMove(
                                 MathHelper.Clamp(x, 0, Width),
-                                MathHelper.Clamp(y, 0, Height));
+                                MathHelper.Clamp(y, 0, Height),
+                                MouseState.X - x,
+                                MouseState.Y - y);
                         }
                         break;
                     }
@@ -1145,7 +1147,7 @@ namespace OpenTK.Platform.X11
                             int y = MathHelper.Clamp(e.CrossingEvent.y, 0, Height);
                             if (x != MouseState.X || y != MouseState.Y)
                             {
-                                OnMouseMove(x, y);
+                                OnMouseMove(x, y, MouseState.X - x, MouseState.Y - y);
                             }
                             OnMouseLeave(EventArgs.Empty);
                         }

@@ -746,25 +746,25 @@ namespace OpenTK.Platform.MacOS
                                 MathHelper.Clamp((int)Math.Round(rf.X), 0, Width),
                                 MathHelper.Clamp((int)Math.Round(Height - rf.Y), 0, Height));
 
-                            // This code used for relative mouse movement which is currently disabled
-                            // Mouse has been disassociated,
-                            // use relative coordinates
-                            // var dx = Cocoa.SendFloat(e, selDeltaX);
-                            //   var dy = Cocoa.SendFloat(e, selDeltaY);
+                        // This code used for relative mouse movement which is currently disabled
+                        // Mouse has been disassociated,
+                        // use relative coordinates
+                        var dx = (int)(Cocoa.SendFloat (e, selDeltaX));
+                        var dy = (int)(Cocoa.SendFloat (e, selDeltaY));
 
-                            //   p = new Point(
-                            //       MathHelper.Clamp((int)Math.Round(p.X + dx), 0, Width),
-                            //       MathHelper.Clamp((int)Math.Round(p.Y + dy), 0, Height);
+                        //   p = new Point(
+                        //       MathHelper.Clamp((int)Math.Round(p.X + dx), 0, Width),
+                        //       MathHelper.Clamp((int)Math.Round(p.Y + dy), 0, Height);
 
-                            if (cursorGrabbed)
+                        if (cursorGrabbed)
                             {
                                 MoveCursorInWindow(p);
                             }
 
                             // Only raise events when the mouse has actually moved
-                            if (MouseState.X != p.X || MouseState.Y != p.Y)
+                            if (dx != 0 || dy != 0)
                             {
-                                OnMouseMove(p.X, p.Y);
+                                OnMouseMove(p.X, p.Y, dx, dy);
                             }
                         }
                         break;
